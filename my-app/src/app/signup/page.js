@@ -5,16 +5,22 @@ import { supabase } from '@/lib/supabase'
 const SignUp = () => {
     const [email, setEmail] = useState('')
     const[password, setPassword] = useState('')
+    const [errorMsg, setErrorMsg] = useState('')
+    const [successMsg, setSuccessMsg] = useState('')
     const handleSignUp = async () => {
   const { data, error } = await supabase.auth.signUp({
     email: email,
     password: password,
   })
 
+
+
   if (error) {
-    console.log('Error:', error.message)
+    setErrorMsg(error.message)
+    setSuccessMsg('')
   } else {
-    console.log('Success:', data)
+    setSuccessMsg('Account created! Check your email to confirm.')
+    setErrorMsg('')
   }
 }
   return (
@@ -33,6 +39,8 @@ const SignUp = () => {
         onChange={(e) => setPassword(e.target.value)}
       />
       <button onClick={handleSignUp}>Create Account</button>
+      {errorMsg && <p>{errorMsg}</p>}
+      {successMsg && <p>{successMsg}</p>}
     </div>
   )
 }
