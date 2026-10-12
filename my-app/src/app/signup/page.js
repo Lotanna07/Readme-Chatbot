@@ -1,4 +1,5 @@
 "use client";
+import Link from "next/link";
 import { useState } from "react";
 import { supabase } from "@/lib/supabase";
 
@@ -39,6 +40,9 @@ const SignUp = () => {
       <button onClick={handleSignUp}>Create Account</button>
       {errorMsg && <p>{errorMsg}</p>}
       {successMsg && <p>{successMsg}</p>}
+      <p>
+        Already have an account? <Link href="/login">Login</Link>
+      </p>
     </div>
   );
 };

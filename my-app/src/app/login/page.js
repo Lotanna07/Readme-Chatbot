@@ -1,4 +1,5 @@
 "use client";
+import Link from "next/link";
 import { useState } from "react";
 import { supabase } from "@/lib/supabase";
 import { useRouter } from "next/navigation";
@@ -38,6 +39,9 @@ const Login = () => {
       />
       <button onClick={handleLogin}>Login</button>
       {errorMsg && <p>{errorMsg}</p>}
+      <p>
+        Don't have an account? <Link href="/signup">Sign Up</Link>
+      </p>
     </div>
   );
 };

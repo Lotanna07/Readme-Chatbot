@@ -16,6 +16,10 @@ const Chatbot = () => {
     };
     checkUser();
   }, [router]);
+  const handleLogout = async () => {
+    await supabase.auth.signOut();
+    router.push("/login");
+  };
   return (
     <div>
       <h1>Chatbot</h1>
