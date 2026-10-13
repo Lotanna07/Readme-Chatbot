@@ -54,6 +54,7 @@ const Chatbot = () => {
     });
 
     const data = await response.json();
+    setResult(data);
   };
 
   // 4. WHAT THE PAGE SHOWS
@@ -70,6 +71,12 @@ const Chatbot = () => {
         <input type="file" accept=".zip" onChange={handleFileChange} />
       </div>
       {file && <p>Selected: {file.name}</p>}
+      {file && <button onClick={handleUpload}>Analyze</button>}
+      {result && (
+        <p>
+          {result.name} ({result.size} bytes)
+        </p>
+      )}
       <button onClick={handleLogout}>Log out</button>
     </div>
   );

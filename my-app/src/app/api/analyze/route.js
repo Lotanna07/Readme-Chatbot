@@ -1,4 +1,5 @@
 import { NextResponse } from "next/server";
+import JSZip from "jszip";
 
 export async function POST(request) {
   const formData = await request.formData();
@@ -10,7 +11,12 @@ export async function POST(request) {
   if (!file) {
     return NextResponse.json({ error: "No file uploaded" }, { status: 400 });
   }
-
+  //upload file
+  const buffer = await file.arrayBuffer();
+  //let jsZip open those bytes
+  const zip = await JSZip.loadAsync(buffer);
+  //the list file path
+  const fileNames = Object.keys(zip.files);
   //  otherwise, send back the file's name and size
   return NextResponse.json({ name: file.name, size: file.size });
 }
