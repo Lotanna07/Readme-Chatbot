@@ -7,6 +7,7 @@ const Chatbot = () => {
   // 1. HOOKS (always first)
   const router = useRouter();
   const [file, setFile] = useState(null);
+  const [result, setResult] = useState(null);
 
   // 2. SESSION CHECK
   useEffect(() => {
@@ -41,6 +42,18 @@ const Chatbot = () => {
     if (droppedFile && droppedFile.name.endsWith(".zip")) {
       setFile(droppedFile);
     }
+  }; // handleDrop closes here
+
+  const handleUpload = async () => {
+    const formData = new FormData();
+    formData.append("file", file);
+
+    const response = await fetch("/api/analyze", {
+      method: "POST",
+      body: formData,
+    });
+
+    const data = await response.json();
   };
 
   // 4. WHAT THE PAGE SHOWS
