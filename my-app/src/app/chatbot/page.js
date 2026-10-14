@@ -54,7 +54,7 @@ const Chatbot = () => {
     });
 
     const data = await response.json();
-    console.log(data);
+
     setResult(data);
   };
 
@@ -78,6 +78,14 @@ const Chatbot = () => {
           {result.name} ({result.size} bytes)
         </p>
       )}
+      <ul>
+        {result &&
+          result.fileNames &&
+          result.fileNames.map((fileName) => (
+            <li key={fileName}>{fileName} </li>
+          ))}
+        ;
+      </ul>
       <button onClick={handleLogout}>Log out</button>
     </div>
   );
