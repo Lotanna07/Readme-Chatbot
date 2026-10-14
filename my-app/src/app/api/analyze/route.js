@@ -18,5 +18,5 @@ export async function POST(request) {
   //the list file path
   const fileNames = Object.keys(zip.files);
   //  otherwise, send back the file's name and size
-  return NextResponse.json({ name: file.name, size: file.size });
+  return NextResponse.json({ name: file.name, size: file.size, fileNames });
 }
