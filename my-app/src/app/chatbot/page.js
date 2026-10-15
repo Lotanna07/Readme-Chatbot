@@ -84,7 +84,6 @@ const Chatbot = () => {
           result.fileNames.map((fileName) => (
             <li key={fileName}>{fileName} </li>
           ))}
-        ;
       </ul>
       <button onClick={handleLogout}>Log out</button>
     </div>
