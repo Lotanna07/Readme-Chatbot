@@ -54,7 +54,7 @@ const Chatbot = () => {
     });
 
     const data = await response.json();
-
+    console.log(data);
     setResult(data);
   };
 
@@ -85,6 +85,16 @@ const Chatbot = () => {
             <li key={fileName}>{fileName} </li>
           ))}
       </ul>
+      {result && result.technologies && (
+        <div>
+          <h2>Technologies:</h2>
+          <ul>
+            {result.technologies.map((tech) => (
+              <li key={tech}>{tech}</li>
+            ))}
+          </ul>
+        </div>
+      )}
       <button onClick={handleLogout}>Log out</button>
     </div>
   );
