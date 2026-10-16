@@ -34,12 +34,23 @@ export async function POST(request) {
   const envPath = fileNames.find(
     (path) => path.endsWith(".env.example") || path.endsWith(".env.sample"),
   );
+  let envVariables = [];
+  if (envPath) {
+    const envText = await zip.file(envPath).async("string");
+
+    const lines = envText.split("\n");
+    envVariables = lines
+      .filter((line) => line.trim() !== "" && !line.trim().startsWith("#"))
+      .map((line) => line.split("=")[0].trim());
+  }
   //  otherwise, send back the file's name and size
   return NextResponse.json({
     name: file.name,
     size: file.size,
     fileNames,
     packagePath,
+    envPath,
     technologies,
+    envVariables,
   });
 }

@@ -54,7 +54,7 @@ const Chatbot = () => {
     });
 
     const data = await response.json();
-    console.log(data);
+
     setResult(data);
   };
 
@@ -91,6 +91,16 @@ const Chatbot = () => {
           <ul>
             {result.technologies.map((tech) => (
               <li key={tech}>{tech}</li>
+            ))}
+          </ul>
+        </div>
+      )}
+      {result && result.envVariables && (
+        <div>
+          <h2>Environment Variables:</h2>
+          <ul>
+            {result.envVariables.map((envVar) => (
+              <li key={envVar}>{envVar}</li>
             ))}
           </ul>
         </div>
