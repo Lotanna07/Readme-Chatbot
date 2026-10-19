@@ -1,26 +1,31 @@
 import { NextResponse } from "next/server";
 import OpenAI from "openai";
 
-const openai = new OpenAI({ apiKey: process.env.OPENAI_API_KEY });
-
 export async function POST(request) {
-  //read the json the page sends us
-  const { name, technologies = [], envVariables = [] } = await request.json();
+  try {
+    const openai = new OpenAI({
+      apiKey: process.env.GEMINI_API_KEY,
+      baseURL: "https://generativelanguage.googleapis.com/v1beta/openai/",
+    });
 
-  //a string telling the Ai what to write
-  const prompt = `Write a GitHub README in Markdown for a project called ${name}.
-                    Start with a short description of what the project does and a friendly introduction.
-                    add badges for the technologies used in the project.
-                    It uses these technologies: ${technologies.join(", ")}.
-                    It needs these environment variables: ${envVariables.join(", ")}.
-                    Include sections for: Tech Stack, Installation, Environment Variables, Running the Project, Contributing.`;
+    const { name, technologies = [], envVariables = [] } = await request.json();
 
-  //ask OpenAI
-  const completion = await openai.chat.completions.create({
-    model: "gpt-4o-mini",
-    messages: [{ role: "user", content: prompt }],
-  });
-  //send the Readme text back
-  const readme = completion.choices[0].message.content;
-  return NextResponse.json({ readme });
+    const prompt = `Write a GitHub README in Markdown for a project called ${name}.
+Start with a short description of what the project does and a friendly introduction.
+Add badges for the technologies used in the project.
+It uses these technologies: ${technologies.join(", ")}.
+It needs these environment variables: ${envVariables.join(", ")}.
+Include sections for: Tech Stack, Installation, Environment Variables, Running the Project, Contributing.`;
+
+    const completion = await openai.chat.completions.create({
+      model: "gemini-3.8-flash",
+      messages: [{ role: "user", content: prompt }],
+    });
+
+    const readme = completion.choices[0].message.content;
+    return NextResponse.json({ readme });
+  } catch (error) {
+    console.log("GENERATE ERROR:", error.message);
+    return NextResponse.json({ error: error.message }, { status: 500 });
+  }
 }

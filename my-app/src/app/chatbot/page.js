@@ -2,12 +2,14 @@
 import { useEffect, useState } from "react";
 import { useRouter } from "next/navigation";
 import { supabase } from "@/lib/supabase";
+import ReactMarkdown from "react-markdown";
 
 const Chatbot = () => {
   // 1. HOOKS (always first)
   const router = useRouter();
   const [file, setFile] = useState(null);
   const [result, setResult] = useState(null);
+  const [readme, setReadme] = useState("");
 
   // 2. SESSION CHECK
   useEffect(() => {
@@ -54,9 +56,39 @@ const Chatbot = () => {
     });
 
     const data = await response.json();
-
     setResult(data);
   };
+  const handleGenerate = async () => {
+    if (!result) return;
+    const response = await fetch("/api/generate", {
+      method: "POST",
+      headers: { "Content-Type": "application/json" },
+      body: JSON.stringify({
+        name: result.name,
+        technologies: result.technologies,
+        envVariables: result.envVariables,
+      }),
+    });
+    const data = await response.json();
+    if (data.error) {
+      setReadme("Error:" + data.error);
+    } else {
+      setReadme(data.readme);
+    }
+  };
+  const sampleReadme = `# My Project
+  A short description of the project.
+
+  ## Tech Stack
+  - React
+  - Next.js
+  - Supabase
+
+  ## Installation
+  1. Clone the repo
+  2. Run npm install
+  3. Run npm run dev
+  `;
 
   // 4. WHAT THE PAGE SHOWS
   return (
@@ -105,6 +137,9 @@ const Chatbot = () => {
           </ul>
         </div>
       )}
+      <button onClick={() => setReadme(sampleReadme)}>Load sample</button>
+      {result && <button onClick={handleGenerate}>Generate README</button>}
+      {readme && <ReactMarkdown>{readme}</ReactMarkdown>}
       <button onClick={handleLogout}>Log out</button>
     </div>
   );
