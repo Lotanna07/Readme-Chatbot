@@ -139,7 +139,11 @@ const Chatbot = () => {
       )}
       <button onClick={() => setReadme(sampleReadme)}>Load sample</button>
       {result && <button onClick={handleGenerate}>Generate README</button>}
-      {readme && <ReactMarkdown>{readme}</ReactMarkdown>}
+      {readme && (
+        <div className="prose">
+          <ReactMarkdown>{readme}</ReactMarkdown>
+        </div>
+      )}
       <button onClick={handleLogout}>Log out</button>
     </div>
   );
