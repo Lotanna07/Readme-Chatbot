@@ -79,6 +79,7 @@ const Chatbot = () => {
       setReadme(data.readme);
     }
   };
+  const handleCopy = async () => {};
   const sampleReadme = `# My Project
   A short description of the project.
 
@@ -142,6 +143,7 @@ const Chatbot = () => {
       )}
       <button onClick={() => setReadme(sampleReadme)}>Load sample</button>
       {result && <button onClick={handleGenerate}>Generate README</button>}
+      {readme && <button onClick={handleCopy}>Copy README</button>}
       {readme && (
         <div className="prose">
           <ReactMarkdown>{readme}</ReactMarkdown>
