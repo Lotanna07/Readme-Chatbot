@@ -56,6 +56,7 @@ const Chatbot = () => {
     });
 
     const data = await response.json();
+    //console.log(data);
     setResult(data);
   };
   const handleGenerate = async () => {
@@ -67,6 +68,8 @@ const Chatbot = () => {
         name: result.name,
         technologies: result.technologies,
         envVariables: result.envVariables,
+        description: result.description,
+        scripts: result.scripts,
       }),
     });
     const data = await response.json();

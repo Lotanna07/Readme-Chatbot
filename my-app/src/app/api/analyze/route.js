@@ -26,10 +26,14 @@ export async function POST(request) {
   const packagePath = fileNames.find((path) => path.endsWith("package.json"));
 
   let technologies = [];
+  let description = "";
+  let scripts = {};
   if (packagePath) {
     const text = await zip.file(packagePath).async("string");
     const packageJson = JSON.parse(text);
     technologies = Object.keys(packageJson.dependencies || {});
+    description = packageJson.description || "";
+    scripts = packageJson.scripts || {};
   }
   const envPath = fileNames.find(
     (path) => path.endsWith(".env.example") || path.endsWith(".env.sample"),
@@ -52,5 +56,7 @@ export async function POST(request) {
     envPath,
     technologies,
     envVariables,
+    description,
+    scripts,
   });
 }
