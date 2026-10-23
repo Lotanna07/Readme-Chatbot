@@ -10,6 +10,9 @@ const Chatbot = () => {
   const [file, setFile] = useState(null);
   const [result, setResult] = useState(null);
   const [readme, setReadme] = useState("");
+  const [loading, setLoading] = useState(false);
+  const [copied, setCopied] = useState(false);
+  const [downloaded, setDownloaded] = useState(false);
 
   // 2. SESSION CHECK
   useEffect(() => {
@@ -56,11 +59,16 @@ const Chatbot = () => {
     });
 
     const data = await response.json();
+    if (data.error) {
+      alert(data.error);
+      return;
+    }
     //console.log(data);
     setResult(data);
   };
   const handleGenerate = async () => {
     if (!result) return;
+    setLoading(true);
     const response = await fetch("/api/generate", {
       method: "POST",
       headers: { "Content-Type": "application/json" },
@@ -78,8 +86,24 @@ const Chatbot = () => {
     } else {
       setReadme(data.readme);
     }
+    setLoading(false);
   };
-  const handleCopy = async () => {};
+  const handleCopy = async () => {
+    await navigator.clipboard.writeText(readme);
+    setCopied(true);
+    setTimeout(() => setCopied(false), 2000);
+  };
+  const handleDownload = () => {
+    const blob = new Blob([readme], { type: "text/markdown" });
+    const url = URL.createObjectURL(blob);
+    const link = document.createElement("a");
+    link.href = url;
+    link.download = "README.md";
+    link.click();
+    URL.revokeObjectURL(url);
+    setDownloaded(true);
+    setTimeout(() => setDownloaded(false), 2000);
+  };
   const sampleReadme = `# My Project
   A short description of the project.
 
@@ -114,13 +138,7 @@ const Chatbot = () => {
           {result.name} ({result.size} bytes)
         </p>
       )}
-      <ul>
-        {result &&
-          result.fileNames &&
-          result.fileNames.map((fileName) => (
-            <li key={fileName}>{fileName} </li>
-          ))}
-      </ul>
+
       {result && result.technologies && (
         <div>
           <h2>Technologies:</h2>
@@ -142,12 +160,23 @@ const Chatbot = () => {
         </div>
       )}
       <button onClick={() => setReadme(sampleReadme)}>Load sample</button>
-      {result && <button onClick={handleGenerate}>Generate README</button>}
-      {readme && <button onClick={handleCopy}>Copy README</button>}
+      {result && (
+        <button onClick={handleGenerate} disabled={loading}>
+          {loading ? "Generating..." : "Generate"}
+        </button>
+      )}
+      {readme && (
+        <button onClick={handleCopy}>{copied ? "copied!" : "Copy"}</button>
+      )}
       {readme && (
         <div className="prose">
           <ReactMarkdown>{readme}</ReactMarkdown>
         </div>
+      )}
+      {readme && (
+        <button onClick={handleDownload}>
+          {downloaded ? "Downloaded" : "Download README.md"}
+        </button>
       )}
       <button onClick={handleLogout}>Log out</button>
     </div>
