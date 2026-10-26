@@ -1,5 +1,6 @@
 import { Geist, Geist_Mono } from "next/font/google";
 import "./globals.css";
+import Galaxy from "@/components/Galaxy";
 
 const geistSans = Geist({
   variable: "--font-geist-sans",
@@ -22,7 +23,17 @@ export default function RootLayout({ children }) {
       lang="en"
       className={`${geistSans.variable} ${geistMono.variable} h-full antialiased`}
     >
-      <body className="min-h-full flex flex-col">{children}</body>
+      <body className="relative min-h-screen bg-transparent text-white">
+        <div className="fixed inset-0 z-0 bg-black pointer-events-none">
+          <Galaxy
+            density={1.5}
+            starSpeed={0.3}
+            hueShift={200}
+            mouseRepulsion={false}
+          />
+        </div>
+        <div className="relative z-10">{children}</div>
+      </body>
     </html>
   );
 }

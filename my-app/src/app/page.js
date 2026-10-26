@@ -1,9 +1,16 @@
 import Link from "next/link";
+import BlurText from "@/components/BlurText";
+
 const Home = () => {
   return (
-    <div className="min-h-screen flex flex-col items-center justify-center bg-gray-900 text-white">
-      <h1 className="text-5xl font-bold">LOTI README CHATBOT</h1>
-      <p className="text-gray-500 mt-4">Drop your project here</p>
+    <div className="min-h-screen flex flex-col items-center justify-center text-white">
+      <BlurText
+        text="LOTI README CHATBOT"
+        delay={150}
+        animateBy="words"
+        className="text-5xl font-bold"
+      />
+      <p className="text-gray-400 mt-4">Drop your project here</p>
       <div className="flex gap-4 mt-6">
         <Link
           href="/signup"
@@ -17,9 +24,6 @@ const Home = () => {
         >
           Login
         </Link>
-        <button className="bg-blue-500 text-white px-4 py-2 rounded-lg">
-          Upload
-        </button>
       </div>
     </div>
   );
