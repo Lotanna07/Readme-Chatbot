@@ -3,6 +3,7 @@ import Link from "next/link";
 import { useState } from "react";
 import { supabase } from "@/lib/supabase";
 import { useRouter } from "next/navigation";
+import link from "next/link";
 
 const Login = () => {
   const [email, setEmail] = useState("");
@@ -23,25 +24,35 @@ const Login = () => {
     }
   };
   return (
-    <div>
-      <h1>Login</h1>
-      <input
-        type="email"
-        placeholder="Email"
-        value={email}
-        onChange={(e) => setEmail(e.target.value)}
-      />
-      <input
-        type="password"
-        placeholder="Password"
-        value={password}
-        onChange={(e) => setPassword(e.target.value)}
-      />
-      <button onClick={handleLogin}>Login</button>
-      {errorMsg && <p>{errorMsg}</p>}
-      <p>
-        Don't have an account? <Link href="/signup">Sign Up</Link>
-      </p>
+    <div className="min-h-screen flex items-center justify-center p-4">
+      <div className="w-full max-w-md bg-white/10 backdrop-blur-md border border-white/20 rounded-2xl p-8 flex flex-col gap-4">
+        <h1 className="text-2xl font-bold text-center">Login</h1>
+        <input
+          type="email"
+          placeholder="Email"
+          value={email}
+          onChange={(e) => setEmail(e.target.value)}
+        />
+        <input
+          type="password"
+          placeholder="Password"
+          value={password}
+          onChange={(e) => setPassword(e.target.value)}
+        />
+        <button
+          onClick={handleLogin}
+          className="w-full bg-blue-500 hover:bg-blue-600 transition py-3 rounded-lg font-semibold"
+        >
+          Login
+        </button>
+        {errorMsg && <p className="text-red-400 text-sm">{errorMsg}</p>}
+        <p className="text-gray-400 text-sm text-center">
+          Don&apos;t have an account?{""}{" "}
+          <Link href="/signup" className="text-blue-400 hover:underline">
+            Sign Up
+          </Link>
+        </p>
+      </div>
     </div>
   );
 };
