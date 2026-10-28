@@ -120,65 +120,132 @@ const Chatbot = () => {
 
   // 4. WHAT THE PAGE SHOWS
   return (
-    <div>
-      <h1>Chatbot</h1>
-      <p>Drop project here</p>
-      <div
-        onDragOver={handleDragOver}
-        onDrop={handleDrop}
-        className="border-2 border-dashed border-gray-400 rounded-lg p-8 my-4"
-      >
-        <p>Drag your project .zip here, or choose a file</p>
-        <input type="file" accept=".zip" onChange={handleFileChange} />
-      </div>
-      {file && <p>Selected: {file.name}</p>}
-      {file && <button onClick={handleUpload}>Analyze</button>}
-      {result && (
-        <p>
-          {result.name} ({result.size} bytes)
-        </p>
-      )}
+    <div className="min-h-screen p-4 md:p-8">
+      <div className="max-w-3xl mx-auto flex flex-col gap-6">
+        {/* top bar */}
+        <div className="flex items-center justify-between">
+          <h1 className="text-2xl font-bold">README Chatbot</h1>
+          <button
+            onClick={handleLogout}
+            className="border border-white/20 px-4 py-2 rounded-lg text-sm hover:bg-white/10 transition"
+          >
+            Log out
+          </button>
+        </div>
 
-      {result && result.technologies && (
-        <div>
-          <h2>Technologies:</h2>
-          <ul>
-            {result.technologies.map((tech) => (
-              <li key={tech}>{tech}</li>
-            ))}
-          </ul>
+        {/* upload card */}
+        <div
+          onDragOver={handleDragOver}
+          onDrop={handleDrop}
+          className="bg-white/10 backdrop-blur-md border-2 border-dashed border-white/30 rounded-2xl p-8 flex flex-col items-center gap-4 text-center"
+        >
+          <p className="text-gray-300">
+            Drag your project .zip here, or choose a file
+          </p>
+          <input
+            type="file"
+            accept=".zip"
+            onChange={handleFileChange}
+            className="text-sm text-gray-300 file:mr-4 file:rounded-lg file:border-0 file:bg-blue-500 file:px-4 file:py-2 file:text-white hover:file:bg-blue-600"
+          />
+          {file && (
+            <p className="text-sm text-gray-400">Selected: {file.name}</p>
+          )}
+          {file && (
+            <button
+              onClick={handleUpload}
+              className="bg-blue-500 hover:bg-blue-600 transition px-6 py-2 rounded-lg font-semibold"
+            >
+              Analyze
+            </button>
+          )}
         </div>
-      )}
-      {result && result.envVariables && (
-        <div>
-          <h2>Environment Variables:</h2>
-          <ul>
-            {result.envVariables.map((envVar) => (
-              <li key={envVar}>{envVar}</li>
-            ))}
-          </ul>
-        </div>
-      )}
-      <button onClick={() => setReadme(sampleReadme)}>Load sample</button>
-      {result && (
-        <button onClick={handleGenerate} disabled={loading}>
-          {loading ? "Generating..." : "Generate"}
+
+        {/* analysis card */}
+        {result && (
+          <div className="bg-white/10 backdrop-blur-md border border-white/20 rounded-2xl p-6 flex flex-col gap-4">
+            <div>
+              <p className="text-lg font-semibold">{result.name}</p>
+              <p className="text-sm text-gray-400">{result.size} bytes</p>
+            </div>
+
+            {result.technologies && result.technologies.length > 0 && (
+              <div>
+                <h2 className="text-sm font-semibold text-gray-300 mb-2">
+                  Technologies
+                </h2>
+                <div className="flex flex-wrap gap-2">
+                  {result.technologies.map((tech) => (
+                    <span
+                      key={tech}
+                      className="bg-blue-500/20 border border-blue-500/40 text-blue-200 text-xs px-3 py-1 rounded-full"
+                    >
+                      {tech}
+                    </span>
+                  ))}
+                </div>
+              </div>
+            )}
+
+            {result.envVariables && result.envVariables.length > 0 && (
+              <div>
+                <h2 className="text-sm font-semibold text-gray-300 mb-2">
+                  Environment Variables
+                </h2>
+                <div className="flex flex-wrap gap-2">
+                  {result.envVariables.map((envVar) => (
+                    <span
+                      key={envVar}
+                      className="bg-white/10 border border-white/20 text-gray-200 text-xs px-3 py-1 rounded-full font-mono"
+                    >
+                      {envVar}
+                    </span>
+                  ))}
+                </div>
+              </div>
+            )}
+
+            <button
+              onClick={handleGenerate}
+              disabled={loading}
+              className="bg-blue-500 hover:bg-blue-600 disabled:opacity-50 transition py-3 rounded-lg font-semibold"
+            >
+              {loading ? "Generating..." : "Generate README"}
+            </button>
+          </div>
+        )}
+
+        {/* README card */}
+        {readme && (
+          <div className="bg-white/10 backdrop-blur-md border border-white/20 rounded-2xl p-6">
+            <div className="flex gap-2 mb-4">
+              <button
+                onClick={handleCopy}
+                className="border border-white/20 px-4 py-2 rounded-lg text-sm hover:bg-white/10 transition"
+              >
+                {copied ? "Copied!" : "Copy README"}
+              </button>
+              <button
+                onClick={handleDownload}
+                className="border border-white/20 px-4 py-2 rounded-lg text-sm hover:bg-white/10 transition"
+              >
+                {downloaded ? "Downloaded!" : "Download README.md"}
+              </button>
+            </div>
+            <div className="prose prose-invert max-w-none">
+              <ReactMarkdown>{readme}</ReactMarkdown>
+            </div>
+          </div>
+        )}
+
+        {/* testing only: remove before deploying */}
+        <button
+          onClick={() => setReadme(sampleReadme)}
+          className="text-xs text-gray-500 hover:text-gray-300 self-start"
+        >
+          Load sample
         </button>
-      )}
-      {readme && (
-        <button onClick={handleCopy}>{copied ? "copied!" : "Copy"}</button>
-      )}
-      {readme && (
-        <div className="prose">
-          <ReactMarkdown>{readme}</ReactMarkdown>
-        </div>
-      )}
-      {readme && (
-        <button onClick={handleDownload}>
-          {downloaded ? "Downloaded" : "Download README.md"}
-        </button>
-      )}
-      <button onClick={handleLogout}>Log out</button>
+      </div>
     </div>
   );
 };
