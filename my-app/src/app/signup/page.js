@@ -22,40 +22,56 @@ const SignUp = () => {
       setErrorMsg("");
     }
   };
+
   return (
-    <div className="min-h-screen flex items-center justify-center p-4">
-      <div className="w-full max-w-md bg-white/10 backdrop-blur-md border border-white/20 rounded-2xl p-8 flex flex-col gap-4">
-        <h1 className="text-3xl font-bold text-center">Sign Up</h1>
-
-        <input
-          type="email"
-          placeholder="Email"
-          value={email}
-          onChange={(e) => setEmail(e.target.value)}
-          className="w-full px-4 py-3 rounded-lg bg-white/10 border border-white/20 text-white placeholder-gray-400 focus:outline-none focus:border-blue-500"
-        />
-        <input
-          type="password"
-          placeholder="Password"
-          value={password}
-          onChange={(e) => setPassword(e.target.value)}
-          className="w-full px-4 py-3 rounded-lg bg-white/10 border border-white/20 text-white placeholder-gray-400 focus:outline-none focus:border-blue-500"
-        />
-
-        <button
-          onClick={handleSignUp}
-          className="w-full bg-blue-500 hover:bg-blue-600 transition py-3 rounded-lg font-semibold"
+    <div className="min-h-screen flex items-center justify-center px-4 text-white">
+      <div className="w-full max-w-sm">
+        <Link
+          href="/"
+          className="text-sm text-gray-400 transition hover:text-white"
         >
-          Create Account
-        </button>
+          ← Back
+        </Link>
 
-        {errorMsg && <p className="text-red-400 text-sm">{errorMsg}</p>}
-        {successMsg && <p className="text-green-400 text-sm">{successMsg}</p>}
+        <h1 className="mt-6 text-4xl font-semibold tracking-tight">
+          Create your account
+        </h1>
+        <p className="mt-2 text-gray-400">
+          Start turning projects into READMEs.
+        </p>
 
-        <p className="text-gray-400 text-sm text-center">
+        <div className="mt-8 flex flex-col gap-3">
+          <input
+            type="email"
+            placeholder="Email"
+            value={email}
+            onChange={(e) => setEmail(e.target.value)}
+            className="w-full rounded-lg border border-white/10 bg-white/5 px-4 py-3 text-white placeholder-gray-500 outline-none transition focus:border-white/40"
+          />
+          <input
+            type="password"
+            placeholder="Password"
+            value={password}
+            onChange={(e) => setPassword(e.target.value)}
+            className="w-full rounded-lg border border-white/10 bg-white/5 px-4 py-3 text-white placeholder-gray-500 outline-none transition focus:border-white/40"
+          />
+          <button
+            onClick={handleSignUp}
+            className="mt-2 w-full rounded-full bg-white py-3 font-medium text-black transition hover:bg-gray-200"
+          >
+            Create account
+          </button>
+        </div>
+
+        {errorMsg && <p className="mt-4 text-sm text-red-400">{errorMsg}</p>}
+        {successMsg && (
+          <p className="mt-4 text-sm text-emerald-400">{successMsg}</p>
+        )}
+
+        <p className="mt-8 text-sm text-gray-400">
           Already have an account?{" "}
-          <Link href="/login" className="text-blue-400 hover:underline">
-            Login
+          <Link href="/login" className="text-white hover:underline">
+            Log in
           </Link>
         </p>
       </div>
