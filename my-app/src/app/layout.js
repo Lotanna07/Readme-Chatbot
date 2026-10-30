@@ -43,6 +43,7 @@ export default function RootLayout({ children }) {
                 width={100}
                 height={100}
                 priority
+                className="h-12 w-12 rounded-full object-cover"
               />
             </Link>
           </header>
