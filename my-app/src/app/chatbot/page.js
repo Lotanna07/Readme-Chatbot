@@ -11,6 +11,7 @@ const Chatbot = () => {
   const [result, setResult] = useState(null);
   const [readme, setReadme] = useState("");
   const [loading, setLoading] = useState(false);
+  const [analyzing, setAnalyzing] = useState(false);
   const [copied, setCopied] = useState(false);
   const [downloaded, setDownloaded] = useState(false);
 
@@ -50,21 +51,40 @@ const Chatbot = () => {
   }; // handleDrop closes here
 
   const handleUpload = async () => {
-    const formData = new FormData();
-    formData.append("file", file);
+    if (!file) return;
+    setAnalyzing(true);
+    setResult(null);
+    setReadme("");
+    try {
+      const formData = new FormData();
+      formData.append("file", file);
 
-    const response = await fetch("/api/analyze", {
-      method: "POST",
-      body: formData,
-    });
+      const response = await fetch("/api/analyze", {
+        method: "POST",
+        body: formData,
+      });
 
-    const data = await response.json();
-    if (data.error) {
-      alert(data.error);
-      return;
+      // The server may answer with HTML (e.g. 413 "too large"), not JSON
+      let data;
+      try {
+        data = await response.json();
+      } catch {
+        throw new Error(
+          response.status === 413
+            ? "This zip is too large to upload. Remove node_modules/.next and try again."
+            : `Server error (${response.status}).`,
+        );
+      }
+      if (!response.ok || data.error) {
+        throw new Error(data.error || `Server error (${response.status}).`);
+      }
+      setResult(data);
+    } catch (err) {
+      console.error("ANALYZE FAILED:", err);
+      alert(err.message || "Could not analyze this zip.");
+    } finally {
+      setAnalyzing(false);
     }
-    //console.log(data);
-    setResult(data);
   };
   const handleGenerate = async () => {
     if (!result) return;
@@ -164,9 +184,10 @@ const Chatbot = () => {
             {file && (
               <button
                 onClick={handleUpload}
-                className="rounded-full bg-white px-7 py-2.5 font-medium text-black transition hover:bg-gray-200"
+                disabled={analyzing}
+                className="rounded-full bg-white px-7 py-2.5 font-medium text-black transition hover:bg-gray-200 disabled:opacity-50"
               >
-                Analyze
+                {analyzing ? "Analyzing..." : "Analyze"}
               </button>
             )}
           </div>
